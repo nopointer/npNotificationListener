@@ -12,7 +12,7 @@ public class NpMsgTypeConstants {
     /**
      * TIM 腾讯的
      */
-    public static final String pckg_tim = "com.tencent.mobileqq";
+    public static final String pckg_tim = "com.tencent.timTIM";
     /**
      * 微信
      */

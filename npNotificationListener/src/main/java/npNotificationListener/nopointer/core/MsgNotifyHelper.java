@@ -44,9 +44,6 @@ public final class MsgNotifyHelper {
     }
 
     public void onAppMsgReceiver(String packName, String from, String msgContent) {
-
-        NpLog.e(packName + "/" + from + "/" + msgContent);
-
         //来电会在系统通知栏里面
         if (packName.equalsIgnoreCase("com.android.incallui")) {
             onNotificationInCall(from, msgContent);
