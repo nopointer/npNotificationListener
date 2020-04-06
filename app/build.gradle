@@ -47,7 +47,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':npNotificationListener')
 
-    implementation 'com.github.nopointer:npLog:1.0.2'
+    implementation 'com.github.nopointer:npLog:1.0.3'
     implementation "com.android.support:appcompat-v7:${var.supportLibraryVersion}"
 
     //ycBle Module 集成的蓝牙库 如果需要ota的话 就要引用dfu
