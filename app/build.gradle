@@ -16,30 +16,7 @@ android {
             exclude 'META-INF/proguard/androidx-annotations.pro'
         }
     }
-    buildTypes {
-        release {
-            minifyEnabled true
-            //去除无用资源
-            shrinkResources true
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-        }
-        dedug{
-            minifyEnabled true
-            //去除无用资源
-            shrinkResources true
-        }
-    }
-
-    repositories {
-        flatDir {
-            dirs 'libs', 'libs'
-        }
-    }
-
-    compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_8
-        sourceCompatibility JavaVersion.VERSION_1_8
-    }
+   
 
 }
 
@@ -47,14 +24,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':npNotificationListener')
 
-    implementation 'com.github.nopointer:npLog:1.0.3'
-    implementation "com.android.support:appcompat-v7:${var.supportLibraryVersion}"
+    implementation 'com.github.nopointer:npLog:1.0.4'
 
-    //ycBle Module 集成的蓝牙库 如果需要ota的话 就要引用dfu
-    //    implementation 'com.github.nopointer:ycBle:beta_0.0.45'
-    //ycBle Module 集成的蓝牙库 如果需要ota的话 就要引用dfu
-    //    implementation 'com.github.nopointer:ycBle:beta_0.2.7'
-//    implementation 'com.google.code.gson:gson:2.8.1'
-//    implementation project(':nordicBle')
 
 }
