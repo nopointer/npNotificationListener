@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import npLog.nopointer.core.NpLog;
+import npNotificationListener.nopointer.core.log.NpNotificationLog;
 
 
 /**
@@ -17,10 +17,10 @@ public final class ReStartNotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        NpLog.e("ReStartNotificationReceiver==>" + intent.getAction());
+        NpNotificationLog.log("ReStartNotificationReceiver==>" + intent.getAction());
         boolean result = NpNotificationUtilHelper.isServiceExisted(context, NpNotificationService.class);
         if (!result) {
-            NpLog.e("通知没有打开,尝试去打开");
+            NpNotificationLog.log("通知没有打开,尝试去打开");
             NpNotificationUtilHelper.getInstance().startListeningForNotification(context);
         }
     }

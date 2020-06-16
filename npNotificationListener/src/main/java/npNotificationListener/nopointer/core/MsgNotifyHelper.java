@@ -5,8 +5,8 @@ import android.service.notification.StatusBarNotification;
 import java.util.ArrayList;
 import java.util.List;
 
-import npLog.nopointer.core.NpLog;
 import npNotificationListener.nopointer.core.callback.MsgCallback;
+import npNotificationListener.nopointer.core.log.NpNotificationLog;
 
 /**
  * Created by nopointer on 2018/7/26.
@@ -84,7 +84,7 @@ public final class MsgNotifyHelper {
      * 通知栏来电提醒
      */
     synchronized void onNotificationInCall(String from, String content) {
-        NpLog.e("来电通知栏:" + from + ":" + content);
+        NpNotificationLog.log("来电通知栏:" + from + ":" + content);
         from = filterPhoneNumber(from);
         initData();
         tmpCallObjList.add(new TmpCallOrSmsObj(from, content + from));
@@ -102,7 +102,7 @@ public final class MsgNotifyHelper {
 
 
     synchronized void onNotificationSMS(String from, String content) {
-        NpLog.e("短信通知栏:" + from + ":" + content);
+        NpNotificationLog.log("短信通知栏:" + from + ":" + content);
         from = filterPhoneNumber(from);
         initData();
         tmpSmsObjList.add(new TmpCallOrSmsObj(from, content));

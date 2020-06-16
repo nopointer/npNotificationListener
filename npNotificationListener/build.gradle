@@ -10,15 +10,13 @@ android {
     defaultConfig {
         minSdkVersion var.minSdkVersion
         targetSdkVersion var.targetSdkVersion
-        versionCode 4
-        versionName "1.0.3"
-        multiDexEnabled true
+        versionCode 5
+        versionName "1.0.4"
     }
 
 }
 
 
 dependencies {
-    implementation 'com.github.nopointer:npLog:1.0.4'
     implementation "com.android.support:appcompat-v7:${var.supportLibraryVersion}"
 }

@@ -9,8 +9,8 @@ import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
-import npLog.nopointer.core.NpLog;
 import npNotificationListener.nopointer.core.MsgNotifyHelper;
+import npNotificationListener.nopointer.core.log.NpNotificationLog;
 import npNotificationListener.nopointer.core.phone.NpContactsUtil;
 
 import static android.telephony.TelephonyManager.EXTRA_STATE_IDLE;
@@ -58,9 +58,9 @@ public class PhoneAndSmsReceiver extends BroadcastReceiver {
             String extraIncomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
             onCallStateChanged(context, state, extraIncomingNumber);
         } else if (action.equalsIgnoreCase(Intent.ACTION_NEW_OUTGOING_CALL)) {
-            NpLog.e("NPPhoneStateListener==>拨打电话出去");
+            NpNotificationLog.log("NPPhoneStateListener==>拨打电话出去");
         } else if (action.equalsIgnoreCase(SMS_RECEIVE_ACTION)) {
-            NpLog.e("接收到短信");
+            NpNotificationLog.log("接收到短信");
             //操蛋的方法 每个地方最好都判断一次吧 金立的烂手机就会空指针异常
             handWithSms(context, intent);
         }
@@ -78,9 +78,9 @@ public class PhoneAndSmsReceiver extends BroadcastReceiver {
     //来电状态监听
     public void onCallStateChanged(Context context, String state, String incomingNumber) {
 
-        NpLog.e("state:" + state + ";incomingNumber:" + incomingNumber);
+        NpNotificationLog.log("state:" + state + ";incomingNumber:" + incomingNumber);
         if (TextUtils.isEmpty(incomingNumber)) {
-            NpLog.e("来电号码为空，没有读取通话记录权限，不往下执行");
+            NpNotificationLog.log("来电号码为空，没有读取通话记录权限，不往下执行");
             return;
         }
 
@@ -89,13 +89,13 @@ public class PhoneAndSmsReceiver extends BroadcastReceiver {
             lastStateAndNumber = currentState;
             String name = NpContactsUtil.queryContactName(context, incomingNumber);
             if (state.equalsIgnoreCase(EXTRA_STATE_RINGING)) {
-                NpLog.e("NPPhoneStateListener==>手机铃声响了，来电人:" + name);
+                NpNotificationLog.log("NPPhoneStateListener==>手机铃声响了，来电人:" + name);
                 MsgNotifyHelper.getMsgNotifyHelper().onPhoneCallIng(incomingNumber, name, 0);
             } else if (state.equalsIgnoreCase(EXTRA_STATE_IDLE)) {
-                NpLog.e("NPPhoneStateListener==>非通话状态" + name);
+                NpNotificationLog.log("NPPhoneStateListener==>非通话状态" + name);
                 MsgNotifyHelper.getMsgNotifyHelper().onPhoneCallIng(incomingNumber, name, 2);
             } else if (state.equalsIgnoreCase(EXTRA_STATE_OFFHOOK)) {
-                NpLog.e("NPPhoneStateListener==>电话被接通了,可能是打出去的，也可能是接听的" + incomingNumber);
+                NpNotificationLog.log("NPPhoneStateListener==>电话被接通了,可能是打出去的，也可能是接听的" + incomingNumber);
                 MsgNotifyHelper.getMsgNotifyHelper().onPhoneCallIng(incomingNumber, name, 1);
             }
         }
@@ -119,7 +119,7 @@ public class PhoneAndSmsReceiver extends BroadcastReceiver {
                     if (null != msg) {
                         number = msg.getOriginatingAddress();
                         String messageContent = msg.getDisplayMessageBody();
-                        NpLog.e("短信:" + number + ":" + messageContent);
+                        NpNotificationLog.log("短信:" + number + ":" + messageContent);
                         if (!TextUtils.isEmpty(messageContent)) {
                             messageContentBuilder.append(messageContent);
                         }

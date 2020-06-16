@@ -7,7 +7,7 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 
-import npLog.nopointer.core.NpLog;
+import npNotificationListener.nopointer.core.log.NpNotificationLog;
 
 
 /**
@@ -32,12 +32,12 @@ public final class NpNotificationService extends NotificationListenerService {
     @Override
     public void onCreate() {
         super.onCreate();
-        NpLog.e("NPNotificationService===>onCreate");
+        NpNotificationLog.log("NPNotificationService===>onCreate");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        NpLog.e("通知栏onStartCommand");
+        NpNotificationLog.log("通知栏onStartCommand");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -45,20 +45,20 @@ public final class NpNotificationService extends NotificationListenerService {
     @Override
     public void onListenerConnected() {
         super.onListenerConnected();
-        NpLog.e("onListenerConnected====>通知栏服务正常，可以获取到通知信息");
+        NpNotificationLog.log("onListenerConnected====>通知栏服务正常，可以获取到通知信息");
     }
 
 
     @Override
     public void onListenerDisconnected() {
         super.onListenerDisconnected();
-        NpLog.e("onListenerConnected====>通知栏服务不正常，不可以获取到通知信息");
+        NpNotificationLog.log("onListenerConnected====>通知栏服务不正常，不可以获取到通知信息");
     }
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn, RankingMap rankingMap) {
         super.onNotificationRemoved(sbn, rankingMap);
-        NpLog.e("onNotificationRemoved====>");
+        NpNotificationLog.log("onNotificationRemoved====>");
         if (!NpNotificationUtilHelper.isServiceExisted(this, NpNotificationService.class)) {
 //            Intent intent = new Intent(this, NpNotificationService.class);
 //            startService(intent);
@@ -70,7 +70,7 @@ public final class NpNotificationService extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
-        NpLog.e("通知栏===>onNotificationPosted");
+        NpNotificationLog.log("通知栏===>onNotificationPosted");
         NPNotificationServiceCanReceive = true;
 
         MsgNotifyHelper.getMsgNotifyHelper().onNotificationPost(sbn);
@@ -82,7 +82,7 @@ public final class NpNotificationService extends NotificationListenerService {
         }
 
         if (android.os.Build.VERSION.SDK_INT < 18) {
-            NpLog.e("Android platform version is lower than 18.");
+            NpNotificationLog.log("Android platform version is lower than 18.");
             return;
         }
 
@@ -107,7 +107,7 @@ public final class NpNotificationService extends NotificationListenerService {
             msgStr = "";
         }
 
-        NpLog.e("通知栏获取到消息==>{" + msgStr + "}===>pckName:" + pckName);
+        NpNotificationLog.log("通知栏获取到消息==>{" + msgStr + "}===>pckName:" + pckName);
 
         handMsg(pckName, from, msgStr);
     }
@@ -121,7 +121,7 @@ public final class NpNotificationService extends NotificationListenerService {
 //    @Override
 //    public void onNotificationPosted(StatusBarNotification sbn, RankingMap rankingMap) {
 //        super.onNotificationPosted(sbn, rankingMap);
-//        NpLog.e("onNotificationPosted(StatusBarNotification sbn,RankingMap rankingMap)");
+//        NpNotificationLog.log("onNotificationPosted(StatusBarNotification sbn,RankingMap rankingMap)");
 //    }
 
     //处理消息，判断消息类型和来源
@@ -145,7 +145,7 @@ public final class NpNotificationService extends NotificationListenerService {
         }
 
 
-        NpLog.e(tmpStr);
+        NpNotificationLog.log(tmpStr);
 //        if (TextUtils.isEmpty(lastMsgStr) || !tmpStr.equals(lastMsgStr)) {
         MsgNotifyHelper.getMsgNotifyHelper().onAppMsgReceiver(pkhName, from, msgContent);
         lastMsgStr = tmpStr;

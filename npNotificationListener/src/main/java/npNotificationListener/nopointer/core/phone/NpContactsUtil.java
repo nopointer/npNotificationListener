@@ -10,7 +10,7 @@ import android.provider.ContactsContract.Data;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
-import npLog.nopointer.core.NpLog;
+import npNotificationListener.nopointer.core.log.NpNotificationLog;
 
 
 /**
@@ -32,7 +32,7 @@ public final class NpContactsUtil {
 
         boolean hasPermission = hasPermissions(context, new String[]{Manifest.permission.READ_CONTACTS});
         if (!hasPermission) {
-            NpLog.e("没有 Manifest.permission.READ_CONTACTS 权限！！！，返回原始号码");
+            NpNotificationLog.log("没有 Manifest.permission.READ_CONTACTS 权限！！！，返回原始号码");
             return number;
         }
         number = number.replace(" ", "").replace("-", "");
@@ -43,7 +43,7 @@ public final class NpContactsUtil {
             number = number.substring(2);
         }
         String result = new String(number);
-        NpLog.e("处理过后的号码格式是:" + result);
+        NpNotificationLog.log("处理过后的号码格式是:" + result);
 
         String numberFormat0 = number;
         String numberFormat1 = "86" + number;
@@ -112,7 +112,7 @@ public final class NpContactsUtil {
             }
             cursor.close();
         }
-        NpLog.e("联系人姓名查询结果:" + result);
+        NpNotificationLog.log("联系人姓名查询结果:" + result);
         return result;
     }
 

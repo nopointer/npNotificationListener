@@ -10,7 +10,8 @@ import android.view.accessibility.AccessibilityEvent;
 
 import java.util.List;
 
-import npLog.nopointer.core.NpLog;
+
+import npNotificationListener.nopointer.core.log.NpNotificationLog;
 
 import static npNotificationListener.nopointer.core.NpNotificationService.NPNotificationServiceCanReceive;
 
@@ -42,7 +43,7 @@ public class NpAccessibilityService extends AccessibilityService {
 
     @Override
     protected void onServiceConnected() {
-        NpLog.e("辅助通知栏服务正常，可以获取到通知信息");
+        NpNotificationLog.log("辅助通知栏服务正常，可以获取到通知信息");
         AccessibilityServiceInfo info = new AccessibilityServiceInfo();
         info.eventTypes = AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED;
         info.notificationTimeout = 100;
@@ -60,7 +61,7 @@ public class NpAccessibilityService extends AccessibilityService {
             return;
         }
         if (NPNotificationServiceCanReceive) {
-            NpLog.e("通知栏可以获取到消息，就不用辅助推送了");
+            NpNotificationLog.log("通知栏可以获取到消息，就不用辅助推送了");
             return;
         }
 
@@ -68,7 +69,7 @@ public class NpAccessibilityService extends AccessibilityService {
         String pkg = accessibilityEvent.getPackageName().toString();
         Notification notification = (Notification) accessibilityEvent.getParcelableData();
         if (notification == null) {
-            NpLog.e("通知栏内容为空，不推送消息");
+            NpNotificationLog.log("通知栏内容为空，不推送消息");
             return;
         }
         String from = "";

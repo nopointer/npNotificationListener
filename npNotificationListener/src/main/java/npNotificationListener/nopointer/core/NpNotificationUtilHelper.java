@@ -12,8 +12,8 @@ import android.support.v4.app.NotificationManagerCompat;
 import java.util.List;
 import java.util.Set;
 
-import npLog.nopointer.core.NpLog;
 import npNotificationListener.nopointer.core.callback.MsgCallback;
+import npNotificationListener.nopointer.core.log.NpNotificationLog;
 import npNotificationListener.nopointer.core.receiver.PhoneAndSmsReceiver;
 
 /**
@@ -55,10 +55,10 @@ public final class NpNotificationUtilHelper {
      */
     public void startListeningForNotification(final Context context) {
         if (!isServiceExisted(context, NpNotificationService.class)) {
-            NpLog.e("通知栏监听服务，没有开启");
+            NpNotificationLog.log("通知栏监听服务，没有开启");
             startNotifyListenService(context);
         } else {
-            NpLog.e("通知栏监听服务，已经开启");
+            NpNotificationLog.log("通知栏监听服务，已经开启");
         }
 
     }
@@ -108,7 +108,7 @@ public final class NpNotificationUtilHelper {
      */
     public void registerPhoneOrSmsReceiver(Context context, boolean enablePhone, boolean enableSms) {
         if (context == null) {
-            NpLog.e("registerBroadcastReceiver failure! context=null!!!");
+            NpNotificationLog.log("registerBroadcastReceiver failure! context=null!!!");
             return;
         }
         unRegisterPhoneAndSmsReceiver(context);
@@ -187,7 +187,7 @@ public final class NpNotificationUtilHelper {
 
 //    //开启监听通知栏的服务
 //    private static void startNotifyListenService(Context context) {
-//        NpLog.e("reStartNotifyListenService==>NPNotificationService");
+//        NpNotificationLog.log("reStartNotifyListenService==>NPNotificationService");
 //        ComponentName thisComponent = new ComponentName(context, NpNotificationService.class);
 //        PackageManager pm = context.getPackageManager();
 //        pm.setComponentEnabledSetting(thisComponent, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
@@ -200,7 +200,7 @@ public final class NpNotificationUtilHelper {
      * @param context
      */
     public static void startNotifyListenService(Context context) {
-        NpLog.e("startNotifyListenService==>NPNotificationService， 开启通知栏监听服务");
+        NpNotificationLog.log("startNotifyListenService==>NPNotificationService， 开启通知栏监听服务");
         ComponentName thisComponent = new ComponentName(context, NpNotificationService.class);
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(thisComponent, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
@@ -245,7 +245,7 @@ public final class NpNotificationUtilHelper {
      */
     public static boolean isNotifyEnable(Context context) {
         Set<String> packageNames = NotificationManagerCompat.getEnabledListenerPackages(context);
-        NpLog.e("获取了通知栏监听权限的应用包名:" + packageNames);
+        NpNotificationLog.log("获取了通知栏监听权限的应用包名:" + packageNames);
         return packageNames.contains(context.getPackageName());
     }
 }
