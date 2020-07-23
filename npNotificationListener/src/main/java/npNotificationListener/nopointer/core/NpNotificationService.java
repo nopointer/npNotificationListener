@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
+import android.util.Log;
 
 import npNotificationListener.nopointer.core.log.NpNotificationLog;
 
@@ -129,10 +130,10 @@ public final class NpNotificationService extends NotificationListenerService {
         String tmpStr = pkhName + " , from:" + from + " , msgContent:" + msgContent;
 
         if (pkhName.equalsIgnoreCase(NpMsgTypeConstants.pckg_wechat)) {
-            if (!TextUtils.isEmpty(from) && !TextUtils.isEmpty(msgContent) && msgContent.length() > 4) {
+            if (!TextUtils.isEmpty(from) && !TextUtils.isEmpty(msgContent) && msgContent.length() > 3) {
                 int startIndex = msgContent.indexOf(from);
                 if (startIndex != -1) {
-                    msgContent = msgContent.substring(startIndex + from.length());
+                    msgContent = msgContent.substring(startIndex + from.length() + 2);
                 }
             }
         } else if (pkhName.equalsIgnoreCase(NpMsgTypeConstants.pckg_instagram)) {
@@ -147,6 +148,7 @@ public final class NpNotificationService extends NotificationListenerService {
 
         NpNotificationLog.log(tmpStr);
 //        if (TextUtils.isEmpty(lastMsgStr) || !tmpStr.equals(lastMsgStr)) {
+        System.out.println("msgContent===>" + msgContent);
         MsgNotifyHelper.getMsgNotifyHelper().onAppMsgReceiver(pkhName, from, msgContent);
         lastMsgStr = tmpStr;
 //        }
