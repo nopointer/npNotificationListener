@@ -126,21 +126,26 @@ public final class NpNotificationService extends NotificationListenerService {
 //    }
 
     //处理消息，判断消息类型和来源
-    public void handMsg(String pkhName, String from, String msgContent) {
+    public void handMsg(String pkhName, String from, final String msgContent) {
         String tmpStr = pkhName + " , from:" + from + " , msgContent:" + msgContent;
 
+        String messageContentText = msgContent;
         if (pkhName.equalsIgnoreCase(NpMsgTypeConstants.pckg_wechat)) {
             if (!TextUtils.isEmpty(from) && !TextUtils.isEmpty(msgContent) && msgContent.length() > 3) {
                 int startIndex = msgContent.indexOf(from);
                 if (startIndex != -1) {
-                    msgContent = msgContent.substring(startIndex + from.length() + 2);
+                    startIndex = startIndex + from.length() + 2;
+                    if (startIndex >= msgContent.length()) return;
+                    messageContentText = msgContent.substring(startIndex);
                 }
             }
         } else if (pkhName.equalsIgnoreCase(NpMsgTypeConstants.pckg_instagram)) {
             if (!TextUtils.isEmpty(from) && !TextUtils.isEmpty(msgContent) && msgContent.length() > from.length()) {
                 int startIndex = msgContent.indexOf(from);
                 if (startIndex != -1) {
-                    msgContent = msgContent.substring(startIndex + from.length());
+                    startIndex = startIndex + from.length();
+                    if (startIndex >= msgContent.length()) return;
+                    messageContentText = msgContent.substring(startIndex);
                 }
             }
         }
@@ -148,10 +153,8 @@ public final class NpNotificationService extends NotificationListenerService {
 
         NpNotificationLog.log(tmpStr);
 //        if (TextUtils.isEmpty(lastMsgStr) || !tmpStr.equals(lastMsgStr)) {
-        System.out.println("msgContent===>" + msgContent);
-        MsgNotifyHelper.getMsgNotifyHelper().onAppMsgReceiver(pkhName, from, msgContent);
+        MsgNotifyHelper.getMsgNotifyHelper().onAppMsgReceiver(pkhName, from, messageContentText);
         lastMsgStr = tmpStr;
-//        }
     }
 
     /**
