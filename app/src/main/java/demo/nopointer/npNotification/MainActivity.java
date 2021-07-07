@@ -1,12 +1,15 @@
 package demo.nopointer.npNotification;
 
+import android.Manifest;
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import npLog.nopointer.core.NpLog;
 import npNotificationListener.nopointer.core.NpNotificationUtilHelper;
+import npNotificationListener.nopointer.core.phone.NpContactsUtil;
 
 
 public class MainActivity extends Activity {
@@ -26,17 +29,22 @@ public class MainActivity extends Activity {
             }
         });
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            requestPermissions(new String[]{
-//                    Manifest.permission.READ_CALL_LOG,
-//                    Manifest.permission.READ_CONTACTS,
-//                    Manifest.permission.RECEIVE_SMS,
-//                    Manifest.permission.READ_PHONE_STATE,
-//                    Manifest.permission.READ_SMS
-//            }, 100);
-//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{
+                    Manifest.permission.READ_CALL_LOG,
+                    Manifest.permission.READ_CONTACTS,
+                    Manifest.permission.RECEIVE_SMS,
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.READ_SMS
+            }, 100);
+        }
+
         NpNotificationUtilHelper.getInstance().registerPhoneOrSmsReceiver(this, true, true);
 //
+
+        String name = NpContactsUtil.getContactName(this, "075583693832");
+        textBtn.setText(name);
+
     }
 
 
@@ -44,13 +52,13 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        NpLog.e("onResume     ，");
-        if (NpNotificationUtilHelper.isNotifyEnable(this)) {
-            NpNotificationUtilHelper.getInstance().startListeningForNotification(this);
-            textBtn.setText("已开启");
-        } else {
-            textBtn.setText("未开启");
-        }
+//        NpLog.e("onResume     ，");
+//        if (NpNotificationUtilHelper.isNotifyEnable(this)) {
+//            NpNotificationUtilHelper.getInstance().startListeningForNotification(this);
+//            textBtn.setText("已开启");
+//        } else {
+//            textBtn.setText("未开启");
+//        }
 
     }
 

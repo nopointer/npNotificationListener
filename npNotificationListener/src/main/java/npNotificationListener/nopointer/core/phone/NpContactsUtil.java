@@ -1,11 +1,13 @@
 package npNotificationListener.nopointer.core.phone;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.Data;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -35,13 +37,13 @@ public final class NpContactsUtil {
             NpNotificationLog.log("没有 Manifest.permission.READ_CONTACTS 权限！！！，返回原始号码");
             return number;
         }
-        number = number.replace(" ", "").replace("-", "");
-        if (number.startsWith("+86")) {
-            number = number.substring(3);
-        }
-        if (number.startsWith("86")) {
-            number = number.substring(2);
-        }
+        number = number.replace(" ", "").replace("-", "").replace("+","");
+//        if (number.startsWith("+86")) {
+//            number = number.substring(3);
+//        }
+//        if (number.startsWith("86")) {
+//            number = number.substring(2);
+//        }
         String result = new String(number);
         NpNotificationLog.log("处理过后的号码格式是:" + result);
 
@@ -112,6 +114,11 @@ public final class NpContactsUtil {
             }
             cursor.close();
         }
+
+        if (result.equalsIgnoreCase(number)){
+            result = getContactName(context,number);
+        }
+
         NpNotificationLog.log("联系人姓名查询结果:" + result);
         return result;
     }
@@ -138,4 +145,22 @@ public final class NpContactsUtil {
         return true;
     }
 
+    public static String getContactName(Context context, String phoneNumber) {
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        Cursor cursor = cr.query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME}, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        String contactName = null;
+        if(cursor.moveToFirst()) {
+            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+        }
+
+        if(cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+
+        return contactName;
+    }
 }
