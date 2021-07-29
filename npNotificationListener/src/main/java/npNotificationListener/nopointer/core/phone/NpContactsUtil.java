@@ -37,7 +37,7 @@ public final class NpContactsUtil {
             NpNotificationLog.log("没有 Manifest.permission.READ_CONTACTS 权限！！！，返回原始号码");
             return number;
         }
-        number = number.replace(" ", "").replace("-", "").replace("+","");
+        number = number.replace(" ", "").replace("-", "").replace("+", "");
 //        if (number.startsWith("+86")) {
 //            number = number.substring(3);
 //        }
@@ -115,8 +115,9 @@ public final class NpContactsUtil {
             cursor.close();
         }
 
-        if (result.equalsIgnoreCase(number)){
-            result = getContactName(context,number);
+        if (result.equalsIgnoreCase(number)) {
+            result = getContactName(context, number);
+
         }
 
         NpNotificationLog.log("联系人姓名查询结果:" + result);
@@ -153,12 +154,15 @@ public final class NpContactsUtil {
             return null;
         }
         String contactName = null;
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
         }
 
-        if(cursor != null && !cursor.isClosed()) {
+        if (cursor != null && !cursor.isClosed()) {
             cursor.close();
+        }
+        if (TextUtils.isEmpty(contactName)) {
+            contactName = phoneNumber;
         }
 
         return contactName;
