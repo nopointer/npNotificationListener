@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
-import android.support.v4.app.NotificationManagerCompat;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
+
+import androidx.core.app.NotificationManagerCompat;
 
 import java.util.List;
 import java.util.Set;
@@ -32,6 +35,8 @@ public final class NpNotificationUtilHelper {
 
     //接收一些常用的广播接收器，用来激活通知栏，不让他挂掉
     private ReStartNotificationReceiver reStartNotificationReceiver = null;
+
+    private CustomPhoneStateListener customPhoneStateListener = null;
 
     private NpNotificationUtilHelper() {
         if (phoneAndSmsReceiver == null) {
@@ -111,10 +116,20 @@ public final class NpNotificationUtilHelper {
             NpNotificationLog.log("registerBroadcastReceiver failure! context=null!!!");
             return;
         }
-        unRegisterPhoneAndSmsReceiver(context);
+        try {
+            unRegisterPhoneAndSmsReceiver(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            unRegisterPhoneStateListener(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         IntentFilter filter = new IntentFilter();
         if (enablePhone) {
-            filter.addAction(PhoneAndSmsReceiver.PHONE_STATE_ACTION);
+//            filter.addAction(PhoneAndSmsReceiver.PHONE_STATE_ACTION);
+            registerPhoneStateListener(context);
         }
         if (enableSms) {
             filter.addAction(PhoneAndSmsReceiver.SMS_RECEIVE_ACTION);
@@ -247,5 +262,30 @@ public final class NpNotificationUtilHelper {
         Set<String> packageNames = NotificationManagerCompat.getEnabledListenerPackages(context);
         NpNotificationLog.log("获取了通知栏监听权限的应用包名:" + packageNames);
         return packageNames.contains(context.getPackageName());
+    }
+
+
+    private void registerPhoneStateListener(Context context) {
+        if (customPhoneStateListener == null) {
+            customPhoneStateListener = new CustomPhoneStateListener(context);
+        }
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        if (telephonyManager != null) {
+            telephonyManager.listen(customPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        }
+    }
+
+
+    private void unRegisterPhoneStateListener(Context context) {
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        if (telephonyManager != null) {
+            if (customPhoneStateListener != null) {
+                telephonyManager.listen(customPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+            } else {
+                telephonyManager.listen(null, PhoneStateListener.LISTEN_NONE);
+            }
+        }
+
+
     }
 }

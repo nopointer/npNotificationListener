@@ -38,7 +38,7 @@ public class PhoneAndSmsReceiver extends BroadcastReceiver {
     /**
      * 手机状态
      */
-    public static final String PHONE_STATE_ACTION = "android.intent.action.PHONE_STATE";
+//    public static final String PHONE_STATE_ACTION = "android.intent.action.PHONE_STATE";
 
     /**
      * 去电
@@ -53,13 +53,14 @@ public class PhoneAndSmsReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        if (action.equalsIgnoreCase(PHONE_STATE_ACTION)) {
-            String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-            String extraIncomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
-            onCallStateChanged(context, state, extraIncomingNumber);
-        } else if (action.equalsIgnoreCase(Intent.ACTION_NEW_OUTGOING_CALL)) {
-            NpNotificationLog.log("NPPhoneStateListener==>拨打电话出去");
-        } else if (action.equalsIgnoreCase(SMS_RECEIVE_ACTION)) {
+//        if (action.equalsIgnoreCase(PHONE_STATE_ACTION)) {
+//            String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
+//            String extraIncomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
+//            onCallStateChanged(context, state, extraIncomingNumber);
+//        } else if (action.equalsIgnoreCase(Intent.ACTION_NEW_OUTGOING_CALL)) {
+//            NpNotificationLog.log("NPPhoneStateListener==>拨打电话出去");
+//        } else
+        if (action.equalsIgnoreCase(SMS_RECEIVE_ACTION)) {
             NpNotificationLog.log("接收到短信");
             //操蛋的方法 每个地方最好都判断一次吧 金立的烂手机就会空指针异常
             handWithSms(context, intent);
@@ -134,8 +135,6 @@ public class PhoneAndSmsReceiver extends BroadcastReceiver {
             }
         }
     }
-
-
 
 
 }

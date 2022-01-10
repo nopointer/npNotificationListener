@@ -42,8 +42,8 @@ public class MainActivity extends Activity {
         NpNotificationUtilHelper.getInstance().registerPhoneOrSmsReceiver(this, true, true);
 //
 
-        String name = NpContactsUtil.getContactName(this, "075583693832");
-        textBtn.setText(name);
+//        String name = NpContactsUtil.getContactName(this, "075583693832");
+//        textBtn.setText(name);
 
     }
 

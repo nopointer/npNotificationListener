@@ -26,6 +26,8 @@ public class NpNotificationLog {
         if (TextUtils.isEmpty(tag)) {
             tag = "NpNotificationLog";
         }
+        StackTraceElement caller = getCallerStackTraceElement();
+        message = "[" + getCallPathAndLineNumber(caller) + "]：" + message;
         if (mLogPrinter == null) {
             Log.e(tag, message);
         } else {
@@ -47,5 +49,23 @@ public class NpNotificationLog {
         String initTag();
     }
 
+
+    /**
+     * 获取调用路径和行号
+     *
+     * @return
+     */
+    private static String getCallPathAndLineNumber(StackTraceElement caller) {
+        String result = "%s.%s(L:%d)";
+        String callerClazzName = caller.getClassName();
+        callerClazzName = callerClazzName.substring(callerClazzName.lastIndexOf(".") + 1);
+        result = String.format(result, callerClazzName, caller.getMethodName(), caller.getLineNumber());
+        return result;
+    }
+
+
+    public static StackTraceElement getCallerStackTraceElement() {
+        return Thread.currentThread().getStackTrace()[5];
+    }
 
 }
