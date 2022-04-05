@@ -129,29 +129,33 @@ public final class NpNotificationService extends NotificationListenerService {
     public void handMsg(String pkhName, String from, final String msgContent) {
         String tmpStr = pkhName + " , from:" + from + " , msgContent:" + msgContent;
 
+        NpNotificationLog.log("tmpStr = " + tmpStr);
+
         String messageContentText = msgContent;
-        if (pkhName.equalsIgnoreCase(NpMsgTypeConstants.pckg_wechat)) {
-            if (!TextUtils.isEmpty(from) && !TextUtils.isEmpty(msgContent) && msgContent.length() > 3) {
-                int startIndex = msgContent.indexOf(from);
-                if (startIndex != -1) {
-                    startIndex = startIndex + from.length() + 2;
-                    if (startIndex >= msgContent.length()) return;
-                    messageContentText = msgContent.substring(startIndex);
-                }
-            }
-        } else if (pkhName.equalsIgnoreCase(NpMsgTypeConstants.pckg_instagram)) {
-            if (!TextUtils.isEmpty(from) && !TextUtils.isEmpty(msgContent) && msgContent.length() > from.length()) {
-                int startIndex = msgContent.indexOf(from);
-                if (startIndex != -1) {
-                    startIndex = startIndex + from.length();
-                    if (startIndex >= msgContent.length()) return;
-                    messageContentText = msgContent.substring(startIndex);
-                }
-            }
-        }
+
+//        if (pkhName.equalsIgnoreCase(NpMsgTypeConstants.pckg_wechat)) {
+//            if (!TextUtils.isEmpty(from) && !TextUtils.isEmpty(msgContent) && msgContent.length() > 3) {
+//                int startIndex = msgContent.indexOf(from);
+//                if (startIndex != -1) {
+//                    startIndex = startIndex + from.length() + 2;
+//                    if (startIndex >= msgContent.length()) return;
+//                    messageContentText = msgContent.substring(startIndex);
+//                }
+//            }
+//        } else
+//            if (pkhName.equalsIgnoreCase(NpMsgTypeConstants.pckg_instagram)) {
+//            if (!TextUtils.isEmpty(from) && !TextUtils.isEmpty(msgContent) && msgContent.length() > from.length()) {
+//                int startIndex = msgContent.indexOf(from);
+//                if (startIndex != -1) {
+//                    startIndex = startIndex + from.length();
+//                    if (startIndex >= msgContent.length()) return;
+//                    messageContentText = msgContent.substring(startIndex);
+//                }
+//            }
+//        }
 
 
-        NpNotificationLog.log(tmpStr);
+//        NpNotificationLog.log(tmpStr);
 //        if (TextUtils.isEmpty(lastMsgStr) || !tmpStr.equals(lastMsgStr)) {
         MsgNotifyHelper.getMsgNotifyHelper().onAppMsgReceiver(pkhName, from, messageContentText);
         lastMsgStr = tmpStr;
