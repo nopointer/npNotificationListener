@@ -67,6 +67,12 @@ public final class MsgNotifyHelper {
         }
     }
 
+    public void onNotificationRemoved(StatusBarNotification sbn){
+        if (msgCallback != null) {
+            msgCallback.onNotificationRemoved(sbn);
+        }
+    }
+
     public void onPhoneCallIng(String phoneNumber, String contactName, int userHandResult) {
         if (msgCallback != null) {
             msgCallback.onPhoneInComing(phoneNumber, contactName, userHandResult);

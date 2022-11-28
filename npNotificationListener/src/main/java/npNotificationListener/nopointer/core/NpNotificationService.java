@@ -59,12 +59,51 @@ public final class NpNotificationService extends NotificationListenerService {
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn, RankingMap rankingMap) {
         super.onNotificationRemoved(sbn, rankingMap);
-        NpNotificationLog.log("onNotificationRemoved====>");
-        if (!NpNotificationUtilHelper.isServiceExisted(this, NpNotificationService.class)) {
-//            Intent intent = new Intent(this, NpNotificationService.class);
-//            startService(intent);
-            NpNotificationUtilHelper.getInstance().startListeningForNotification(getApplicationContext());
+
+        NpNotificationLog.log("onNotificationRemoved63====>"+rankingMap);
+
+        MsgNotifyHelper.getMsgNotifyHelper().onNotificationRemoved(sbn);
+
+        if (sbn == null) return;
+        //应用包名
+        String pckName = sbn.getPackageName();
+        if (TextUtils.isEmpty(pckName)) {
+            return;
         }
+
+        if (android.os.Build.VERSION.SDK_INT < 18) {
+            NpNotificationLog.log("Android platform version is lower than 18.");
+            return;
+        }
+
+        Notification notification = sbn.getNotification();
+
+        Bundle extras = notification.extras;
+        if (extras == null) return;
+
+        //消息发送方,QQ 来电或者语音是没有发送方的，为空
+        String from = "";
+
+        String notificationTitle = extras.getString(Notification.EXTRA_TITLE);
+        if (!TextUtils.isEmpty(notificationTitle)) {
+            from = notificationTitle;
+        }
+
+        //消息内容
+        String msgStr;
+        try {
+            msgStr = extras.getCharSequence(Notification.EXTRA_TEXT).toString();
+        } catch (NullPointerException e) {
+            msgStr = "";
+        }
+
+        NpNotificationLog.log("通知栏移除的消息==>{" + msgStr + "}===>pckName:" + pckName);
+//
+//        if (!NpNotificationUtilHelper.isServiceExisted(this, NpNotificationService.class)) {
+////            Intent intent = new Intent(this, NpNotificationService.class);
+////            startService(intent);
+//            NpNotificationUtilHelper.getInstance().startListeningForNotification(getApplicationContext());
+//        }
     }
 
     //接收到通知消息的回调
@@ -117,6 +156,9 @@ public final class NpNotificationService extends NotificationListenerService {
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
         super.onNotificationRemoved(sbn);
+
+
+
     }
 
 //    @Override

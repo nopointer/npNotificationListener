@@ -47,6 +47,10 @@ public abstract class MsgCallback {
     }
 
 
+    public void onNotificationRemoved(StatusBarNotification sbn) {
+
+    }
+
     /**
      * 通知栏来电提醒
      */
