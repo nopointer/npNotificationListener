@@ -126,22 +126,25 @@ public final class NpNotificationUtilHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        IntentFilter filter = new IntentFilter();
+
         if (enablePhone) {
 //            filter.addAction(PhoneAndSmsReceiver.PHONE_STATE_ACTION);
             registerPhoneStateListener(context);
         }
         if (enableSms) {
-            filter.addAction(PhoneAndSmsReceiver.SMS_RECEIVE_ACTION);
-        }
-        try {
-            if (phoneAndSmsReceiver == null) {
-                phoneAndSmsReceiver = new PhoneAndSmsReceiver();
+            try {
+                IntentFilter filter = new IntentFilter();
+                filter.addAction(PhoneAndSmsReceiver.SMS_RECEIVE_ACTION);
+                
+                if (phoneAndSmsReceiver == null) {
+                    phoneAndSmsReceiver = new PhoneAndSmsReceiver();
+                }
+                context.registerReceiver(phoneAndSmsReceiver, filter);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            context.registerReceiver(phoneAndSmsReceiver, filter);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
     }
 
     /**
