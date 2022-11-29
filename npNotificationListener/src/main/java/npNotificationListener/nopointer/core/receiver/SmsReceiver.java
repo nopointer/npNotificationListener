@@ -23,7 +23,7 @@ import static android.telephony.TelephonyManager.EXTRA_STATE_RINGING;
  * 对于国内的贱商，真的是fuck啊，普通短信可以收到没问题，问题是一个通知类的短信来了，就他娘的拦截了，真恶心
  * * 这个广播，部分手机还有可能会回调2次
  */
-public class PhoneAndSmsReceiver extends BroadcastReceiver {
+public class SmsReceiver extends BroadcastReceiver {
 
     /**
      * 最后一次状态和来电号码，为了去除重复的数据

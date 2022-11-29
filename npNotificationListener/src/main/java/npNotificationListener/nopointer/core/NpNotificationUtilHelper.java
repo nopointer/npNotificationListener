@@ -17,7 +17,7 @@ import java.util.Set;
 
 import npNotificationListener.nopointer.core.callback.MsgCallback;
 import npNotificationListener.nopointer.core.log.NpNotificationLog;
-import npNotificationListener.nopointer.core.receiver.PhoneAndSmsReceiver;
+import npNotificationListener.nopointer.core.receiver.SmsReceiver;
 
 /**
  * Created by nopointer on 2018/7/26.
@@ -30,7 +30,7 @@ public final class NpNotificationUtilHelper {
     /**
      * 来电和短信广播接收器
      */
-    private PhoneAndSmsReceiver phoneAndSmsReceiver = null;
+    private SmsReceiver smsReceiver = null;
 
 
     //接收一些常用的广播接收器，用来激活通知栏，不让他挂掉
@@ -39,8 +39,8 @@ public final class NpNotificationUtilHelper {
     private CustomPhoneStateListener customPhoneStateListener = null;
 
     private NpNotificationUtilHelper() {
-        if (phoneAndSmsReceiver == null) {
-            phoneAndSmsReceiver = new PhoneAndSmsReceiver();
+        if (smsReceiver == null) {
+            smsReceiver = new SmsReceiver();
         }
         if (reStartNotificationReceiver == null) {
             reStartNotificationReceiver = new ReStartNotificationReceiver();
@@ -116,49 +116,18 @@ public final class NpNotificationUtilHelper {
             NpNotificationLog.log("registerBroadcastReceiver failure! context=null!!!");
             return;
         }
-        try {
-            unRegisterPhoneAndSmsReceiver(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            unRegisterPhoneStateListener(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        IntentFilter filter = new IntentFilter();
+
+        stopListenSMS(context);
+
+        stopListenPhone(context);
+
         if (enablePhone) {
-//            filter.addAction(PhoneAndSmsReceiver.PHONE_STATE_ACTION);
-            registerPhoneStateListener(context);
+            startListenPhone(context);
+//            filter.addAction(SmsReceiver.PHONE_STATE_ACTION);
         }
+
         if (enableSms) {
-            filter.addAction(PhoneAndSmsReceiver.SMS_RECEIVE_ACTION);
-        }
-        try {
-            if (phoneAndSmsReceiver == null) {
-                phoneAndSmsReceiver = new PhoneAndSmsReceiver();
-            }
-            context.registerReceiver(phoneAndSmsReceiver, filter);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 注销来电和短信广播接收器
-     *
-     * @param context
-     */
-    public void unRegisterPhoneAndSmsReceiver(Context context) {
-        try {
-            if (phoneAndSmsReceiver == null) {
-                return;
-            }
-            context.unregisterReceiver(phoneAndSmsReceiver);
-        } catch (IllegalArgumentException e) {
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            startListenSMS(context);
         }
     }
 
@@ -265,27 +234,70 @@ public final class NpNotificationUtilHelper {
     }
 
 
-    private void registerPhoneStateListener(Context context) {
-        if (customPhoneStateListener == null) {
-            customPhoneStateListener = new CustomPhoneStateListener(context);
-        }
-        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        if (telephonyManager != null) {
-            telephonyManager.listen(customPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-        }
-    }
-
-
-    private void unRegisterPhoneStateListener(Context context) {
-        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        if (telephonyManager != null) {
-            if (customPhoneStateListener != null) {
-                telephonyManager.listen(customPhoneStateListener, PhoneStateListener.LISTEN_NONE);
-            } else {
-                telephonyManager.listen(null, PhoneStateListener.LISTEN_NONE);
+    /**
+     * 开始监听来电
+     */
+    public void startListenPhone(Context context) {
+        try {
+            if (customPhoneStateListener == null) {
+                customPhoneStateListener = new CustomPhoneStateListener(context);
             }
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (telephonyManager != null) {
+                telephonyManager.listen(customPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-
     }
+
+    /**
+     * 停止监听来电
+     */
+    public void stopListenPhone(Context context) {
+        try {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (telephonyManager != null) {
+                if (customPhoneStateListener != null) {
+                    telephonyManager.listen(customPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+                } else {
+                    telephonyManager.listen(null, PhoneStateListener.LISTEN_NONE);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 开始监听短信
+     */
+    public void startListenSMS(Context context) {
+        try {
+            if (smsReceiver == null) {
+                smsReceiver = new SmsReceiver();
+            }
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(SmsReceiver.SMS_RECEIVE_ACTION);
+            context.registerReceiver(smsReceiver, filter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 停止监听短信
+     */
+    public void stopListenSMS(Context context) {
+        try {
+            if (smsReceiver == null) {
+                return;
+            }
+            context.unregisterReceiver(smsReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
