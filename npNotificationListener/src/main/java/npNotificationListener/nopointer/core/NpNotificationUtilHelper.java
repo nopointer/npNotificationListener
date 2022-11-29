@@ -135,7 +135,7 @@ public final class NpNotificationUtilHelper {
             try {
                 IntentFilter filter = new IntentFilter();
                 filter.addAction(PhoneAndSmsReceiver.SMS_RECEIVE_ACTION);
-                
+
                 if (phoneAndSmsReceiver == null) {
                     phoneAndSmsReceiver = new PhoneAndSmsReceiver();
                 }
