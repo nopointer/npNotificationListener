@@ -10,9 +10,6 @@ import android.util.Log;
 import npNotificationListener.nopointer.core.log.NpNotificationLog;
 import npNotificationListener.nopointer.core.phone.NpContactsUtil;
 
-import static android.telephony.TelephonyManager.EXTRA_STATE_IDLE;
-import static android.telephony.TelephonyManager.EXTRA_STATE_OFFHOOK;
-import static android.telephony.TelephonyManager.EXTRA_STATE_RINGING;
 
 /**
  * 来去电监听
