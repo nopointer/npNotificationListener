@@ -120,7 +120,7 @@ public class SmsReceiver extends BroadcastReceiver {
                     if (null != msg) {
                         number = msg.getOriginatingAddress();
                         String messageContent = msg.getDisplayMessageBody();
-                        NpNotificationLog.log("短信:" + number + ":" + messageContent);
+                        NpNotificationLog.log("短信 -> " + number + ":" + messageContent);
                         if (!TextUtils.isEmpty(messageContent)) {
                             messageContentBuilder.append(messageContent);
                         }

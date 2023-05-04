@@ -32,6 +32,8 @@ public final class NpContactsUtil {
      * @param number 手机号码 先把这个手机号码过滤一下，变成普通的手机号码，然后再变成不同厂商喜欢的号码格式
      */
     public static String queryContactName(Context context, String number) {
+        String oldNumber = number;
+        String afterHandNumber = number;
         String result = number;
         try {
             boolean hasPermission = hasPermissions(context, new String[]{Manifest.permission.READ_CONTACTS});
@@ -40,6 +42,7 @@ public final class NpContactsUtil {
                 return number;
             }
             number = number.replace(" ", "").replace("-", "").replace("+", "");
+            afterHandNumber = number;
 //        if (number.startsWith("+86")) {
 //            number = number.substring(3);
 //        }
@@ -123,8 +126,11 @@ public final class NpContactsUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return result;
+        if (result.equals(afterHandNumber)) {
+            return oldNumber;
+        } else {
+            return result;
+        }
     }
 
 
